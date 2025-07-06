@@ -1,0 +1,62 @@
+⚙️ Configuration Files
+Here's a breakdown of the main configuration files:
+
+1. named.conf.options
+This file controls the global options for the BIND9 server. Key settings include:
+
+Forwarders: Google's DNS servers are set as forwarders.
+
+allow-query { any; }: The server is open to queries from any client.
+
+listen-on { any; }: The server listens for queries on all available network interfaces.
+
+recursion yes;: Recursion is enabled.
+
+2. named.conf.local
+This file defines the custom zones for our domain.
+
+A master zone is defined for prabhath.com which points to the forward.zone file.
+
+A reverse zone 64.168.192.in-addr.arpa is also defined as a master zone, pointing to the reverse.zone file.
+
+3. forward.zone
+This file contains the DNS records for the prabhath.com domain.
+
+SOA Record: Defines the start of authority for the zone.
+
+NS Record: Specifies ns1.prabhath.com as the nameserver.
+
+A Records:
+
+prabhath.com -> 192.168.64.3
+
+ns1.prabhath.com -> 192.168.64.3
+
+www.prabhath.com -> 192.168.64.3
+
+4. reverse.zone
+This file maps IP addresses back to their hostnames.
+
+SOA and NS Records: Similar to the forward zone file.
+
+PTR Records:
+
+10 -> prabhath.com.
+
+20 -> www.prabhath.com.
+
+✅ Verification & Status
+The DNS server was tested to ensure it was running correctly.
+
+Service Status
+The systemctl status bind9 command shows that the BIND9 service is active (running).
+
+DNS Query Testing
+The dig and nslookup commands were used to test the DNS resolution from both the server and a client machine.
+
+Server-side dig: The dig @localhost prabhath.com command successfully returned the A record 192.168.64.3.
+
+Client-side nslookup: A client machine on the same network successfully resolved prabhath.com using the new DNS server. However, it failed to resolve ns1.prabhath.com due to a missing PTR record for it in the reverse zone.
+
+Conclusion
+This configuration provides a solid foundation for a local DNS server. It demonstrates the essential components of DNS, including forward and reverse lookups, and serves as a practical example of BIND9 implementation
